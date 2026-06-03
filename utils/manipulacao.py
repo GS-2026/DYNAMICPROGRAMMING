@@ -18,7 +18,6 @@ def adicionar_ocorrencia(lista):
     except ValueError:
         print("\nDados inválidos.")
 
-
 def remover_ocorrencia(lista):
     uc = input("Digite a UC ou 0 para voltar: ")
     if uc == "0": return
