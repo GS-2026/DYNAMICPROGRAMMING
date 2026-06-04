@@ -5,7 +5,7 @@ Aplicação em Python para análise de registros históricos de área queimada e
 ---
 
 # Video
-[![Ver demonstração no YouTube](https://img.shields.io/badge/YouTube-Ver%20Demonstração-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=jB1WFe3co1s)
+[![Ver demonstração no YouTube](https://img.shields.io/badge/YouTube-Ver%20Demonstração-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=OsPviwjvno8)
 
 ---
 
