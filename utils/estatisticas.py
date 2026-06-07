@@ -6,12 +6,15 @@ def estatisticas_gerais(lista):
     maior_registro = None
     
     while atual:
-        registro = atual.data
-        total_registros += 1
-        soma_area += registro.area
-        if registro.area > maior_area:
-            maior_area = registro.area
-            maior_registro = registro
+        try:
+            registro = atual.data
+            total_registros += 1
+            soma_area += registro.area
+            if registro.area > maior_area:
+                maior_area = registro.area
+                maior_registro = registro
+        except (AttributeError, TypeError, ValueError) as erro:
+            print(f"Registro inválido ignorado: {erro}")
         atual = atual.next
     
     if total_registros == 0:

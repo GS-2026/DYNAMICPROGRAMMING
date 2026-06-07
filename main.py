@@ -9,6 +9,12 @@ from utils.grafico import gerar_grafico_comparativo, gerar_grafico_uc
 from utils.manipulacao import (adicionar_ocorrencia, remover_ocorrencia)
 
 lista = carregar_csv("dados/queimadas_UCs_federais.csv")
+
+if lista is None:
+    print("\nErro: não foi possível carregar o arquivo de dados. "
+        "Coloque o arquivo 'queimadas_UCs_federais.csv' na pasta 'dados' e tente novamente.")
+    print("ENCERRANDO O PROGRAMA...")
+    exit(1)
 historico = Pilha()
 fila = Fila()
 
@@ -29,7 +35,7 @@ while True:
 
     if opcao == "1":
         while True:
-            uc = input("Digite o nome da UC(Unidade de Conservação) ou 0 para voltar: ")
+            uc = input("\nDigite o nome da UC(Unidade de Conservação) ou 0 para voltar: ")
             if uc == "0":
                 break
             
@@ -63,7 +69,7 @@ while True:
         estatisticas_gerais(lista)
 
     elif opcao == "7":
-        uc = input("Digite o nome da UC: ")
+        uc = input("\nDigite o nome da UC: ")
         resultados = busca_uc(lista, uc)
         if resultados:
             gerar_grafico_uc(lista, uc)
@@ -73,7 +79,7 @@ while True:
     elif opcao == "8":
         nomes_ucs = []
         while True:
-            uc = input("Digite o nome da UC (ou 0 para gerar o gráfico): ").strip()
+            uc = input("\nDigite o nome da UC (ou 0 para gerar o gráfico): ").strip()
             if uc == "0":
                 break
             
@@ -84,13 +90,13 @@ while True:
             resultados = busca_uc(lista, uc)
             
             if not resultados:
-                print("UC não encontrada.\n")
+                print("UC não encontrada.")
                 continue
             
             nomes_ucs.append(uc)
             
             print("UC adicionada com sucesso. "
-                f"({len(resultados)} registros encontrados)\n")
+                f"({len(resultados)} registros encontrados). ")
         
         if len(nomes_ucs) < 2:
             print("É necessário informar pelo menos duas UCs para comparação.\n")
@@ -101,34 +107,34 @@ while True:
             gerar_grafico_comparativo(lista,nomes_ucs)
 
     elif opcao == "9":
-        ucs = []
+        enfileiradas = []
+        
         while True:
-            uc = input("Digite a UC ou 0 para finalizar: ").strip()
+            uc = input("\nDigite a UC ou 0 para processar exportações: ").strip()
             if uc == "0":
                 break
-            
-            if any(nome.lower() == uc.lower() for nome in ucs):
-                print("UC já adicionada.")
+            if any(nome.lower() == uc.lower() for nome in enfileiradas):
+                print("UC já está na fila.")
                 continue
             
             resultados = busca_uc(lista, uc)
-            
             if not resultados:
                 print("UC não encontrada.")
                 continue
-            
-            ucs.append(uc)
-            
-            print(f"UC adicionada ({len(resultados)} registros encontrados).")
-            
-        if not ucs:
-            print("Nenhuma UC selecionada.")
+            fila.enqueue(uc)
+            enfileiradas.append(uc)
+            print(f"UC enfileirada ({len(resultados)} registros). "
+                f"Total na fila: {fila.size()}")
+
+        if fila.is_empty():
+            print("Nenhuma UC na fila.")
         else:
-            fila.enqueue(ucs)
-            print("Exportação iniciada.")
-            solicitacao = fila.dequeue()
-            exportar_csv(lista, solicitacao)
-            print("Arquivo gerado com sucesso.")
+            print(f"\nProcessando {fila.size()} exportação(ões)...")
+            while not fila.is_empty():
+                solicitacao = fila.dequeue()
+                print(f"Exportando: {solicitacao}")
+                exportar_csv(lista, [solicitacao])
+            print("Todas as exportações concluídas.")
 
     elif opcao == "0":
         break
